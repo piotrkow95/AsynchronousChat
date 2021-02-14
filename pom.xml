@@ -12,7 +12,7 @@
     <artifactId>messenger</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>messenger</name>
-    <description>Aplikacja do wysyłania wiadomości tekstowych w czasie rzeczywistym</description>
+    <description>Application to send asynchronous sending messages </description>
 
     <properties>
         <java.version>11</java.version>

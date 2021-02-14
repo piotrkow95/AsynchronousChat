@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>PK Messenger</title>
+</head>
+<body>
+<h1>Hello!</h1>
+
+<div>
+    <h3>Chat window:</h3>
+    <span th:text="${allMessages}"></span>
+</div>
+
+<form action="#" method="post" th:object="${newMessage}">
+    <label for="newMessage">Content:</label>
+    <input id="newMessage" type="text" th:field="*{text}">
+
+    <button type="submit">Send</button>
+</form>
+</body>
+</html>
