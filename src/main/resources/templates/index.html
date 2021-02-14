@@ -9,7 +9,9 @@
 
 <div>
     <h3>Chat window:</h3>
-    <span th:text="${allMessages}"></span>
+    <div th:each="msg : ${allMessages}">
+        <span th:text="${msg}"></span>
+    </div>
 </div>
 
 <form action="#" method="post" th:object="${newMessage}">
