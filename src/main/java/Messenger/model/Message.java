@@ -8,5 +8,6 @@ import java.time.LocalDateTime;
 public class Message {
     private final String text;
     private final LocalDateTime timestamp;
+    private final String username;
 
 }
