@@ -19,12 +19,28 @@ function disconnect() {
 }
 
 function sendMessage() {
-    stompClient.send("/app/publishMessage", {}, JSON.stringify({'text': $("#newMessageInput").val()}));
+    let newMessageInput = $("#newMessageInput");
+    stompClient.send("/app/publishMessage", {}, JSON.stringify({'text': newMessageInput.val()}));
+    newMessageInput.val('');
 }
 
 function showNewMessage(message) {
-    $("#allMessagesDiv")
-        .append(message.humanReadableTimestamp + " " + message.user.name + " " + message.text);
+
+    let div = document.createElement('div');
+    let timestampSpan = document.createElement('span');
+    timestampSpan.textContent = message.humanReadableTimestamp + ' ';
+
+    let userSpan = document.createElement('span');
+    userSpan.textContent = message.user.name + ' ';
+    userSpan.style = 'color: ' + message.user.colorCode + ';';
+
+    let textSpan = document.createElement('span');
+    textSpan.textContent = message.text;
+
+    div.appendChild(timestampSpan);
+    div.appendChild(userSpan);
+    div.appendChild(textSpan);
+    $("#allMessagesDiv").append(div);
 }
 
 $(function () {
