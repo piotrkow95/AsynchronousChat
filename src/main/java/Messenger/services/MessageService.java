@@ -2,6 +2,7 @@ package Messenger.services;
 
 import Messenger.frontend.dto.SendMessageDto;
 import Messenger.model.Message;
+import Messenger.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class MessageService {
     private final UsernameService usernameService;
 
     public void postPublicMessage(SendMessageDto messageDto) {
-        allMessages.add(new Message(messageDto.getText(), LocalDateTime.now(), usernameService.getUsername()));
+        allMessages.add(new Message(messageDto.getText(), LocalDateTime.now(), new User(usernameService.getUsername())));
     }
 
     public List<Message> readAllPublicMessages() {
