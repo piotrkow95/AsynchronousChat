@@ -10,7 +10,9 @@
 <div>
     <h3>Chat window:</h3>
     <div th:each="msg : ${allMessages}">
-        <span th:text="${msg}"></span>
+        <span th:text="${msg.getHumanReadableTimestamp()}"></span>
+        <span th:text="${msg.username}"></span>
+        <span th:text="${msg.text}"></span>
     </div>
 </div>
 

@@ -28,7 +28,7 @@ public class FrontendController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("allMessages",
-                convertMessagesToText(messageService.readAllPublicMessages()));
+                messageService.readAllPublicMessages());
         model.addAttribute("newMessage", new SendMessageDto());
         return "index";
     }
