@@ -9,18 +9,20 @@
 
 <div>
     <h3>Chat window:</h3>
-    <div th:each="msg : ${allMessages}">
-        <span th:text="${msg.getHumanReadableTimestamp()}"></span>
-        <span th:text="${msg.username}"></span>
-        <span th:text="${msg.text}"></span>
+    <div id="allMessagesDiv">
+        <div th:each="msg : ${allMessages}">
+            <span th:text="${msg.getHumanRedableTimestamp()}"></span>
+            <span th:style="'color:' + ${msg.user.colorCode} + ';'" th:text="${msg.getName()}"></span>
+            <span th:text="${msg.text}"></span>
+        </div>
     </div>
 </div>
 
-<form action="#" method="post" th:object="${newMessage}">
-    <label for="newMessage">Content:</label>
-    <input id="newMessage" type="text" th:field="*{text}">
+<form>
+    <label for="newMessageInput">Content:</label>
+    <input id="newMessageInput" type="text">
 
-    <button type="submit">Send</button>
+    <button type="submit" id="sendMessage">Send</button> //sendMessage from app.js
 </form>
 </body>
 </html>
