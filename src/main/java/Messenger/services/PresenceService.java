@@ -1,5 +1,6 @@
 package Messenger.services;
 
+import Messenger.frontend.PresenceController;
 import Messenger.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -14,6 +15,7 @@ import java.util.Map;
 @Log
 public class PresenceService {
     private final UsernameService usernameService;
+    private final PresenceController presenceController;
 
     private Map<String, User> activeUsers = new HashMap<>();
 
@@ -24,7 +26,8 @@ public class PresenceService {
     }
 
     public void userLoggedOut(String sessionId) {
-        activeUsers.remove(sessionId);
+        User oldUser = activeUsers.remove(sessionId);
+        presenceController.publishLogoutInfo(oldUser);
     }
 
     public User getUser(String sessionId) {

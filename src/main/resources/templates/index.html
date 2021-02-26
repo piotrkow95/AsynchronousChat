@@ -12,7 +12,14 @@
 </head>
 <body>
 <h1>Hello!</h1>
-
+<div>
+    <h2>Active users:</h2>
+    <div id="allActiveUsersDiv">
+                <span th:each="user : ${allActiveUsers}"
+                      th:text="${user.name} + ' '"
+                      th:style="'color: ' + ${user.colorCode} + ';'"  ></span>
+    </div>
+</div>
 <div>
     <h3>Chat window:</h3>
     <div id="allMessagesDiv">

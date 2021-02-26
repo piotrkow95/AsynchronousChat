@@ -21,7 +21,7 @@ public class MessageController {
 
     @MessageMapping("/publishMessage")
     @SendTo("/topic/allMessages")
-    public Message publishMessage(@Payload SendMessageDto messageDto, MessageHeaderAccessor messageHeaderAccessor) throws Exception {
+    public Message publishMessage(@Payload SendMessageDto messageDto, MessageHeaderAccessor messageHeaderAccessor) {
         String sessionId = ((StompHeaderAccessor) messageHeaderAccessor).getSessionId();
         return messageService.postPublicMessage(messageDto, sessionId);
     }

@@ -8,6 +8,9 @@ function connect() {
         stompClient.subscribe('/topic/allMessages', function (msg) {
             showNewMessage(JSON.parse(msg.body));
         });
+        stompClient.subscribe('/topic/allLogins', function (msg) {
+            handleUsersActivity(JSON.parse(msg.body));
+        });
     });
 }
 
@@ -56,6 +59,25 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
+
+    function handleUsersActivity(message) {
+        let allMessagesDiv = $("#allActiveUsersDiv");
+        if (message.type === "USER_LOGGED_IN") {
+            let userSpan = document.createElement('span');
+            userSpan.textContent = message.username + ' ';
+            userSpan.style = 'color: ' + message.colorCode + ';';
+            allMessagesDiv.append(userSpan);
+        } else if (message.type === "USER_LOGGED_OUT") {
+            let allChildren = allMessagesDiv[0].children;
+            for (let i = 0; i < allChildren.length; i++) {
+                let child = allChildren[i];
+                if (child.textContent.trim() === message.username) {
+                    allMessagesDiv[0].removeChild(child);
+                }
+            }
+        }
+    }
+
     connect();
     // $( "#connect" ).click(function() { connect(); });
     // $( "#disconnect" ).click(function() { disconnect(); });

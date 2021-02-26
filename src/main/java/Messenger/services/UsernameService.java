@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class UsernameService {
     private final Random RANDOM = new Random();
     private final String[] NAMES = {"Cat", "Dog", "Hamster", "Horse", "Cow", "Chicken", "Indyk", "Pig", "Elephant",
-            "Giraffe", "Tiger", "Lion", "Ant"};
+            "Bear","Crocodile", "Panda", "Hedgehog", "Sparrow", "Penguin", "Giraffe", "Tiger", "Lion", "Ant"};
     private final List<String> availableUsernames = new LinkedList<>();
     private int lastGeneratedIndex = 0;
 
