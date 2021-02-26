@@ -20,10 +20,8 @@ function disconnect() {
 
 function sendMessage() {
     let newMessageInput = $("#newMessageInput");
-    let usernameInput = $('#usernameInput');
     stompClient.send("/app/publishMessage", {}, JSON.stringify(
         {'text': newMessageInput.val(),
-            'username': usernameInput.val()
         }
     ));
     newMessageInput.val('');

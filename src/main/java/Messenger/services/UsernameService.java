@@ -13,22 +13,13 @@ import java.util.stream.Collectors;
 @Service
 @SessionScope
 public class UsernameService {
-    private static final Random RANDOM = new Random();
-    private static final String[] NAMES = {"Cat", "Dog", "Hamster", "Horse", "Cow", "Chicken", "Indyk", "Pig", "Elephant",
+    private final Random RANDOM = new Random();
+    private final String[] NAMES = {"Cat", "Dog", "Hamster", "Horse", "Cow", "Chicken", "Indyk", "Pig", "Elephant",
             "Giraffe", "Tiger", "Lion", "Ant"};
-    private static final List<String> availableUsernames = new LinkedList<>();
-    private static int lastGeneratedIndex = 0;
+    private final List<String> availableUsernames = new LinkedList<>();
+    private int lastGeneratedIndex = 0;
 
-    private String username = null;
-
-    public String getUsername() {
-        if (username == null) {
-            username = generateNewUsername();
-        }
-        return username;
-    }
-
-    private String generateNewUsername() {
+    public String generateNewUsername() {
         if (availableUsernames.size() == 0) {
             lastGeneratedIndex++;
             availableUsernames.addAll(Arrays.stream(NAMES)

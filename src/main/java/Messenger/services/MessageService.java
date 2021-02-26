@@ -14,11 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageService {
     private final List<Message> allMessages = new ArrayList<>();
+    private final PresenceService presenceService;
 
-    private final UsernameService usernameService;
-
-    public Message postPublicMessage(SendMessageDto messageDto) {
-        Message msg = new Message(messageDto.getText(), LocalDateTime.now(), new User(usernameService.getUsername()));
+    public Message postPublicMessage(SendMessageDto messageDto, String sessionId) {
+        User sender = presenceService.getUser(sessionId);
+        Message msg = new Message(messageDto.getText(), LocalDateTime.now(), sender);
         allMessages.add(msg);
         return msg;
     }
