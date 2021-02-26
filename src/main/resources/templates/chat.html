@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PK Messenger</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+    <link href="/app.css" rel="stylesheet">
+</head>
+<body>
+<h1>Hello!</h1>
+<div>
+    <h2>Active users:</h2>
+    <div id="allActiveUsersDiv">
+        <button th:each="user : ${allActiveUsers}"
+                th:text="${user.name} + ' '"
+                th:style="'color: ' + ${user.colorCode} + ';'"
+                th:data1="${user.name}"
+                onclick="toggleDirectMessageUser(this.getAttribute('data1'));"
+        ></button>
+    </div>
+</div>
+<div>
+    <h3>Chat window:</h3>
+    <div id="allMessagesDiv">
+        <div th:each="msg : ${allMessages}">
+            <span th:text="${msg.getHumanReadableTimestamp()}"></span>
+            <span th:style="'color:' + ${msg.sender.colorCode} + ';'" th:text="${msg.sender.getName()}" ></span>
+            <span th:text="${msg.text}"></span>
+        </div>
+    </div>
+</div>
+
+<form>
+    <label for="newMessageInput">Content:</label>
+    <input id="newMessageInput" type="text">
+
+    <button type="submit" id="sendMessage">Send</button>
+    //sendMessage from app.js
+</form>
+</body>
+</html>

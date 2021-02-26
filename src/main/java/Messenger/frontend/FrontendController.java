@@ -14,15 +14,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Controller
 public class FrontendController {
-
     private final MessageService messageService;
     private final PresenceService presenceService;
 
     @GetMapping("/")
     public String index(Model model) {
+        return "index";
+    }
+
+    @GetMapping("/chat")
+    public String chat(Model model) {
         model.addAttribute("allMessages",
                 messageService.readAllPublicMessages());
         model.addAttribute("allActiveUsers", presenceService.getAllActiveUsers());
-        return "index";
+        return "chat";
     }
 }
