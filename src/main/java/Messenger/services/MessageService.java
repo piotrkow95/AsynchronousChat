@@ -17,8 +17,10 @@ public class MessageService {
 
     private final UsernameService usernameService;
 
-    public void postPublicMessage(SendMessageDto messageDto) {
-        allMessages.add(new Message(messageDto.getText(), LocalDateTime.now(), new User(usernameService.getUsername())));
+    public Message postPublicMessage(SendMessageDto messageDto) {
+        Message msg = new Message(messageDto.getText(), LocalDateTime.now(), new User(usernameService.getUsername()));
+        allMessages.add(msg);
+        return msg;
     }
 
     public List<Message> readAllPublicMessages() {

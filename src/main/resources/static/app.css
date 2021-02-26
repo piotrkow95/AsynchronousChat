@@ -1,0 +1,8 @@
+#allMessagesDiv {
+    position: relative;
+    overflow: auto;
+    max-height: 70vh;
+    height: 70vh;
+    width: 95vw;
+    margin: auto;
+}

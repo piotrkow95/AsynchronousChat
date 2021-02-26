@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>PK Messenger</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+    <link href="/app.css" rel="stylesheet">
 </head>
 <body>
 <h1>Hello!</h1>
@@ -21,6 +27,7 @@
 <form>
     <label for="newMessageInput">Content:</label>
     <input id="newMessageInput" type="text">
+    <input id="usernameInput" type="hidden" name="username" th:value="${username}}">
 
     <button type="submit" id="sendMessage">Send</button> //sendMessage from app.js
 </form>

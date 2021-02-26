@@ -20,8 +20,7 @@ public class MessageController {
     @MessageMapping("/publishMessage")
     @SendTo("/topic/allMessages")
     public Message publishMessage(SendMessageDto messageDto) throws Exception {
-        messageService.postPublicMessage(messageDto);
-        List<Message> messages = messageService.readAllPublicMessages();
-        return messages.get(messages.size()-1);
+        return messageService.postPublicMessage(messageDto);
+
     }
 }

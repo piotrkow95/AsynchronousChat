@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class Message {
 
-    private static DateTimeFormatter FORMATTER_TIMESTAMP = DateTimeFormatter.ofPattern("hh:mm:ss");
+    private static DateTimeFormatter FORMATTER_TIMESTAMP = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private final String text;
     private final LocalDateTime timestamp;

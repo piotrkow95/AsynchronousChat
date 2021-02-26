@@ -20,7 +20,12 @@ function disconnect() {
 
 function sendMessage() {
     let newMessageInput = $("#newMessageInput");
-    stompClient.send("/app/publishMessage", {}, JSON.stringify({'text': newMessageInput.val()}));
+    let usernameInput = $('#usernameInput');
+    stompClient.send("/app/publishMessage", {}, JSON.stringify(
+        {'text': newMessageInput.val(),
+            'username': usernameInput.val()
+        }
+    ));
     newMessageInput.val('');
 }
 
@@ -40,7 +45,13 @@ function showNewMessage(message) {
     div.appendChild(timestampSpan);
     div.appendChild(userSpan);
     div.appendChild(textSpan);
-    $("#allMessagesDiv").append(div);
+
+    let allMessagesDiv = $("#allMessagesDiv");
+    allMessagesDiv.append(div);
+
+    allMessagesDiv.stop().animate({
+        scrollTop: allMessagesDiv[0].scrollHeight
+    }, 500);
 }
 
 $(function () {
