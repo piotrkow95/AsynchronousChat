@@ -13,9 +13,10 @@ public class SecurityConfig
     @Override
     protected void configure(HttpSecurity http)
             throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .anyRequest().authenticated()
-                .and().formLogin().disable();
+        http.antMatcher("/**")
+                .authorizeRequests(a -> a
+                        .antMatchers("/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2Login();
     }
 }

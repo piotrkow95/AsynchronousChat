@@ -5,7 +5,6 @@ import Messenger.model.MyPrincipal;
 import Messenger.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -26,7 +25,7 @@ public class PresenceService {
         String newUsername = null;
         if (principal instanceof MyPrincipal) {
             newUsername = usernameService.generateNewUsername();
-        } else if (principal instanceof OAuth2Authentication){
+        } else {
             newUsername = principal.getName();
         }
 
