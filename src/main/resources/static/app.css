@@ -1,8 +1,19 @@
+body {
+    height: 100vh;
+}
+
 #allMessagesDiv {
     position: relative;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
     max-height: 70vh;
     height: 70vh;
     width: 95vw;
     margin: auto;
+}
+
+video {
+    max-width: 100%;
+    max-height: 30vh;
+    display: block;
 }
