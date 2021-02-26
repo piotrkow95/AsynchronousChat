@@ -64,8 +64,21 @@ function showNewMessage(message) {
         recipientSpan.style = 'color: ' + message.recipient.colorCode + ';';
     }
 
-    let textSpan = document.createElement('span');
-    textSpan.textContent = message.text;
+    let textSpan = null;
+    let video = null;
+    if (message.type === "TEXT") {  //text messages front
+        textSpan = document.createElement('span');
+        textSpan.textContent = message.text;
+    } else if (message.type === "GIF") {  //gifs front
+        video = document.createElement('video');
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        let source = document.createElement('source');
+        source.src = message.text;
+        source.type = "video/mp4";
+        video.appendChild(source);
+    }
 
     div.appendChild(timestampSpan);
     div.appendChild(senderSpan);

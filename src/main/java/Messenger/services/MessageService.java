@@ -4,6 +4,7 @@ import Messenger.frontend.PrivateOutboundMessageController;
 import Messenger.frontend.dto.SendMessageDto;
 import Messenger.frontend.dto.SendPrivateMessageDto;
 import Messenger.model.Message;
+import Messenger.model.MessageType;
 import Messenger.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -20,6 +21,8 @@ public class MessageService {
     private final List<Message> allMessages = new ArrayList<>();
     private final PresenceService presenceService;
     private final PrivateOutboundMessageController privateOutboundMessageController;
+    private final GifService gifService;
+
 
     public Message postPublicMessage(SendMessageDto messageDto, String principalName) {
         final Message msg = prepareMessage(messageDto, principalName);
@@ -44,7 +47,14 @@ public class MessageService {
         log.info("Received message " + messageDto.getText() + " from " +
                 sender.getName() + " to " + (recipient == null ? "all" : recipient.getName()));
 
-        return new Message(messageDto.getText(), LocalDateTime.now(), sender, recipient);
+        String textToSend = messageDto.getText();
+        MessageType messageType = MessageType.TEXT;
+        if (gifService.isGifMessage(textToSend)) {
+            textToSend = gifService.prepareGifMessageText(textToSend);
+            messageType = MessageType.GIF;
 
+        }
+
+        return new Message(textToSend, LocalDateTime.now(), sender, recipient, messageType);
     }
 }

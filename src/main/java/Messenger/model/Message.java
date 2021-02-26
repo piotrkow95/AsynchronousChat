@@ -16,6 +16,7 @@ public class Message {
     private final LocalDateTime timestamp;
     private final User sender;
     private final User recipient;
+    private final MessageType type;
 
     public String getHumanReadableTimestamp(){
         return timestamp.format(FORMATTER_TIMESTAMP);
