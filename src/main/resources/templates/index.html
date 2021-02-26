@@ -9,5 +9,6 @@
 <body>
 <h1 th:text="'Hello ' + ${principalName} + '!'"></h1>
 <a th:href="@{/chat}">Open chat</a>
+<a th:if="${principalName.equals('anonymous')}" th:href="@{/login}">Log in</a>
 </body>
 </html>

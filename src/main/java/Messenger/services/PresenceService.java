@@ -3,6 +3,8 @@ package Messenger.services;
 import Messenger.frontend.PresenceController;
 import Messenger.model.MyPrincipal;
 import Messenger.model.User;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,9 @@ public class PresenceService {
         String newUsername = null;
         if (principal instanceof MyPrincipal) {
             newUsername = usernameService.generateNewUsername();
-        } else {
-            newUsername = principal.getName();
+        } else if (principal instanceof OAuth2AuthenticationToken){
+            OAuth2User user = ((OAuth2AuthenticationToken) principal).getPrincipal();
+            newUsername = user.getAttribute("name");
         }
 
         User newUser = new User(newUsername, principal.getName());
