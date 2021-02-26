@@ -2,6 +2,7 @@ package Messenger.frontend;
 
 
 import Messenger.frontend.dto.SendMessageDto;
+import Messenger.frontend.dto.SendPrivateMessageDto;
 import Messenger.model.Message;
 import Messenger.services.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,19 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @MessageMapping("/publishMessage")
+    @MessageMapping("/publishPublicMessage")
     @SendTo("/topic/allMessages")
-    public Message publishMessage(@Payload SendMessageDto messageDto, MessageHeaderAccessor messageHeaderAccessor) {
+    public Message publishPublicMessage(@Payload SendMessageDto messageDto,
+                                        MessageHeaderAccessor messageHeaderAccessor) {
         String sessionId = ((StompHeaderAccessor) messageHeaderAccessor).getSessionId();
         return messageService.postPublicMessage(messageDto, sessionId);
     }
+
+    @MessageMapping("/publishPrivateMessage")
+    public void publishPrivateMessage(@Payload SendPrivateMessageDto messageDto,
+                                      MessageHeaderAccessor messageHeaderAccessor) {
+        String sessionId = ((StompHeaderAccessor) messageHeaderAccessor).getSessionId();
+        messageService.postPrivateMessage(messageDto, sessionId);
+    }
+
 }

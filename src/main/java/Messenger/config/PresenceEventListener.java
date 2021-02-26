@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.security.Principal;
+
 @Log
 @RequiredArgsConstructor
 @Component
@@ -19,6 +21,7 @@ public class PresenceEventListener {
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
+        Principal user = event.getUser();
         String sessionId = headers.getSessionId();
         log.info("User " + sessionId + "connected.");
         presenceService.userLoggedIn(sessionId);

@@ -34,6 +34,10 @@ public class PresenceService {
         return activeUsers.get(sessionId);
     }
 
+    public User getUserByName(String name) {
+        return getAllActiveUsers().stream().filter(u -> u.getName().equals(name)).findFirst().get();
+    }
+
     public Collection<User> getAllActiveUsers() {
         return activeUsers.values();
     }
