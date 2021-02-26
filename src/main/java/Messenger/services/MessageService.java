@@ -22,8 +22,7 @@ public class MessageService {
     private final PrivateOutboundMessageController privateOutboundMessageController;
 
     public Message postPublicMessage(SendMessageDto messageDto, String principalName) {
-        User sender = presenceService.getUser(principalName);
-        Message msg = new Message(messageDto.getText(), LocalDateTime.now(), sender, null);
+        final Message msg = prepareMessage(messageDto, principalName);
         allMessages.add(msg);
         return msg;
     }
@@ -33,12 +32,19 @@ public class MessageService {
     }
 
     public void postPrivateMessage(SendPrivateMessageDto messageDto, String principalName) {
-        final User sender = presenceService.getUser(principalName);
-        final User recipient = presenceService.getUserByName(messageDto.getRecipient());
-        log.info("Received private message " + messageDto.getText() + " from " +
-                sender.getName() + " to " + messageDto.getRecipient());
+        final Message msg = prepareMessage(messageDto, principalName);
+        privateOutboundMessageController.publishPrivateMessage(msg);
+    }
 
-        Message msg = new Message("\uD83D\uDD12" + messageDto.getText(), LocalDateTime.now(), sender, recipient);
-        privateOutboundMessageController.publicPrivateMessage(msg, sender, recipient);
+    private Message prepareMessage(SendMessageDto messageDto, String senderPrincipalName) {
+        final User sender = presenceService.getUser(senderPrincipalName);
+        final User recipient = (messageDto instanceof SendPrivateMessageDto)
+                ? presenceService.getUserByName(((SendPrivateMessageDto) messageDto).getRecipient())
+                : null;
+        log.info("Received message " + messageDto.getText() + " from " +
+                sender.getName() + " to " + (recipient == null ? "all" : recipient.getName()));
+
+        return new Message(messageDto.getText(), LocalDateTime.now(), sender, recipient);
+
     }
 }
