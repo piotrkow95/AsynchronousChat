@@ -7,7 +7,7 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
 </head>
 <body>
-<h1>Hello!</h1>
-<a th:href="@{/chat}">Enter as a guest</a>
+<h1 th:text="'Hello ' + ${principalName} + '!'"></h1>
+<a th:href="@{/chat}">Open chat</a>
 </body>
 </html>

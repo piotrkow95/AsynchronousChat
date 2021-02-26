@@ -13,6 +13,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -23,16 +25,14 @@ public class MessageController {
     @MessageMapping("/publishPublicMessage")
     @SendTo("/topic/allMessages")
     public Message publishPublicMessage(@Payload SendMessageDto messageDto,
-                                        MessageHeaderAccessor messageHeaderAccessor) {
-        String sessionId = ((StompHeaderAccessor) messageHeaderAccessor).getSessionId();
-        return messageService.postPublicMessage(messageDto, sessionId);
+                                        Principal principal) {
+        return messageService.postPublicMessage(messageDto, principal.getName());
     }
 
     @MessageMapping("/publishPrivateMessage")
     public void publishPrivateMessage(@Payload SendPrivateMessageDto messageDto,
-                                      MessageHeaderAccessor messageHeaderAccessor) {
-        String sessionId = ((StompHeaderAccessor) messageHeaderAccessor).getSessionId();
-        messageService.postPrivateMessage(messageDto, sessionId);
+                                      Principal principal) {
+        messageService.postPrivateMessage(messageDto, principal.getName());
     }
 
 }

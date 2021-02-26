@@ -1,11 +1,14 @@
 package Messenger.services;
 
 import Messenger.frontend.PresenceController;
+import Messenger.model.MyPrincipal;
 import Messenger.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,19 +22,26 @@ public class PresenceService {
 
     private Map<String, User> activeUsers = new HashMap<>();
 
-    public void userLoggedIn(String sessionId) {
-        String newUsername = usernameService.generateNewUsername();
-        User newUser = new User(newUsername, sessionId);
-        activeUsers.put(sessionId, newUser);
+    public void userLoggedIn(Principal principal) {
+        String newUsername = null;
+        if (principal instanceof MyPrincipal) {
+            newUsername = usernameService.generateNewUsername();
+        } else if (principal instanceof OAuth2Authentication){
+            newUsername = principal.getName();
+        }
+
+        User newUser = new User(newUsername, principal.getName());
+        activeUsers.put(principal.getName(), newUser);
+        presenceController.publishLoginInfo(newUser);
     }
 
-    public void userLoggedOut(String sessionId) {
-        User oldUser = activeUsers.remove(sessionId);
+    public void userLoggedOut(String principalName) {
+        User oldUser = activeUsers.remove(principalName);
         presenceController.publishLogoutInfo(oldUser);
     }
 
-    public User getUser(String sessionId) {
-        return activeUsers.get(sessionId);
+        public User getUser(String principalName) {
+            return activeUsers.get(principalName);
     }
 
     public User getUserByName(String name) {

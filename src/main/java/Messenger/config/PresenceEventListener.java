@@ -21,17 +21,17 @@ public class PresenceEventListener {
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-        Principal user = event.getUser();
-        String sessionId = headers.getSessionId();
-        log.info("User " + sessionId + "connected.");
-        presenceService.userLoggedIn(sessionId);
+        // guests = sessionID (from UserInterceptor)
+        // github users = login (from oauth)
+        String principalName = event.getUser().getName();
+        log.info("User " + principalName + " connected.");
+        presenceService.userLoggedIn(event.getUser());
     }
 
     @EventListener
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
-        SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headers.getSessionId();
-        log.info("User " + sessionId + "disconnected.");
-        presenceService.userLoggedIn(sessionId);
+        String principalName = event.getUser().getName();
+        log.info("User: " + principalName + " connected.");
+        presenceService.userLoggedOut(principalName);
     }
 }

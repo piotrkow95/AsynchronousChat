@@ -21,8 +21,8 @@ public class MessageService {
     private final PresenceService presenceService;
     private final PrivateOutboundMessageController privateOutboundMessageController;
 
-    public Message postPublicMessage(SendMessageDto messageDto, String sessionId) {
-        User sender = presenceService.getUser(sessionId);
+    public Message postPublicMessage(SendMessageDto messageDto, String principalName) {
+        User sender = presenceService.getUser(principalName);
         Message msg = new Message(messageDto.getText(), LocalDateTime.now(), sender, null);
         allMessages.add(msg);
         return msg;
@@ -32,8 +32,8 @@ public class MessageService {
         return allMessages;
     }
 
-    public void postPrivateMessage(SendPrivateMessageDto messageDto, String sessionId) {
-        final User sender = presenceService.getUser(sessionId);
+    public void postPrivateMessage(SendPrivateMessageDto messageDto, String principalName) {
+        final User sender = presenceService.getUser(principalName);
         final User recipient = presenceService.getUserByName(messageDto.getRecipient());
         log.info("Received private message " + messageDto.getText() + " from " +
                 sender.getName() + " to " + messageDto.getRecipient());

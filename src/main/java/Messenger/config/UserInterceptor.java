@@ -18,7 +18,9 @@ public class UserInterceptor implements ChannelInterceptor {
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            accessor.setUser(new MyPrincipal(accessor.getSessionId()));
+            if (accessor.getUser() == null) {
+                accessor.setUser(new MyPrincipal(accessor.getSessionId()));
+            }
         }
         return message;
     }

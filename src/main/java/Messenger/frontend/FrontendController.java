@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
 
 
 @Log
@@ -18,7 +19,8 @@ public class FrontendController {
     private final PresenceService presenceService;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, Principal principal) {
+        model.addAttribute("principalName", principal == null ? "anonymous" : principal.getName());
         return "index";
     }
 

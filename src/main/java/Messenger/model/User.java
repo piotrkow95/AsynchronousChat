@@ -12,11 +12,11 @@ import java.util.Random;
 public class User {
    private final String name;
    private final String colorCode;
-   private final String sessionId;
+   private final String principalName;
 
-    public User(String name, String sessionId) {
+    public User(String name, String principalName) {
         this.name = name;
-        this.sessionId= sessionId;
+        this.principalName = principalName;
         Random r = new Random(this.name.hashCode());
         int randomColor = r.nextInt(0xffffff + 1);
         this.colorCode = String.format("#%06x", randomColor);

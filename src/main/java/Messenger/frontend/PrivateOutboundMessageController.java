@@ -13,8 +13,8 @@ public class PrivateOutboundMessageController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public void publicPrivateMessage(Message msg, User sender, User recipient) {
-        simpMessagingTemplate.convertAndSendToUser(sender.getSessionId(), "/topic/privateMessages", msg);
-        simpMessagingTemplate.convertAndSendToUser(recipient.getSessionId(), "/topic/privateMessages", msg);
+        simpMessagingTemplate.convertAndSendToUser(sender.getPrincipalName(), "/topic/privateMessages", msg);
+        simpMessagingTemplate.convertAndSendToUser(recipient.getPrincipalName(), "/topic/privateMessages", msg);
     }
 
 }
