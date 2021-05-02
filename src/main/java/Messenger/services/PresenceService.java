@@ -55,7 +55,11 @@ public class PresenceService {
 
     public User getUserByCookie(String jsessionid) {
         String stompId = JSESSIONID_TO_STOMPID_MAP.get(jsessionid);
-        return getUser(stompId);
+        User user = getUser(stompId);
+        if (user == null) {
+            log.warning("Could not find user with cookie " + jsessionid);
+        }
+        return user;
     }
 
 

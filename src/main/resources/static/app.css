@@ -1,25 +1,44 @@
 body {
     height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-flow: row;
 }
 
 aside {
-    width: 10vw;
+    flex: 0 0 10%;
     height: 100vh;
     float: left;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
 
 main {
-    float: left;
-    width: 89vw;
+    flex: 0 0 90%;
     height: 100vh;
 }
 
 aside img {
     width: 9vw;
+    width: 100%;
 }
 
 .selected {
     border: 2px solid blue;
+}
+
+.notification {
+    animation: spinner 500ms infinite;
+}
+
+@keyframes spinner {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 #allMessagesDiv {

@@ -15,6 +15,8 @@ public class SecurityConfig
                 .authorizeRequests(a -> a
                         .antMatchers("/**").permitAll()
                         .anyRequest().authenticated())
+                .cors().disable()
+                .csrf().disable()
                 .oauth2Login();
     }
 }

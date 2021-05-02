@@ -3,7 +3,6 @@ package Messenger.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -40,7 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         // http://localhost:8080/websocket/335/4garada2/websocket
                         String[] uriParts = request.getURI().toString().split("/");
                         String stompClientId = uriParts[uriParts.length - 2];
-                        System.out.println("Adding maping jsessionid=" + jsessionid + " to stompClientId=" + stompClientId);
+                        System.out.println("Adding mapping jsessionid=" + jsessionid + " to stompClientId=" + stompClientId);
                         JSESSIONID_TO_STOMPID_MAP.put(jsessionid, stompClientId);
                         return true;
                     }

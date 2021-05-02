@@ -55,7 +55,8 @@ function sendMessage(text, type) {
     }
     if (!type) {
         type = 'TEXT'
-    }    if (text.startsWith('::')) {
+    }
+    if (text.startsWith('::')) {
         handleGifSearch(text.substr(2));
     } else {
         if (directMessagesRecipient == null) {
@@ -80,6 +81,19 @@ function sendMessage(text, type) {
 }
 
 function showNewMessage(message) {
+    let isPublicMsg = message.recipient == null;
+    let isPrivateMessage = !isPublicMsg;
+    let weAreInterestedInPublicConversation = directMessagesRecipient == null;
+    let weAreInterestedInThisPrivateConversation = !isPublicMsg && ((message.sender.name === directMessagesRecipient)
+        || (message.recipient.name === directMessagesRecipient));
+    let isActiveChannelMessage = (isPublicMsg && weAreInterestedInPublicConversation) || (isPrivateMessage && weAreInterestedInThisPrivateConversation);
+
+    if (!isActiveChannelMessage) {
+        let img = findAsideImgFromUsername(isPublicMsg ? null : message.sender.name);
+        img.classList.add('notification');
+        console.log('Skip message ', message);
+        return;
+    }
 
     let div = document.createElement('div');
     let timestampSpan = document.createElement('span');
@@ -105,7 +119,16 @@ function showNewMessage(message) {
     if (message.type === "TEXT") {  //text messages front
         textSpan = document.createElement('span');
         textSpan.textContent = message.text;
-    } else if (message.type === "GIF") {  //gifs front
+    } else if (message.type === 'LINK') {
+        textSpan = document.createElement('span');
+        let a = document.createElement('a');
+        a.href = message.text;
+        let fileName = message.text.substring(message.text.lastIndexOf('/') + 1);
+        fileName = decodeURI(fileName);
+        a.innerText = fileName;
+        a.target = '_blank';
+        textSpan.appendChild(a);
+    } else if (message.type === "GIF") {
         video = document.createElement('video');
         video.autoplay = true;
         video.loop = true;
@@ -163,35 +186,37 @@ function handleUsersActivity(message) {
 
 let directMessagesRecipient = null;
 
-function toggleDirectMessageUser(username) {
-    console.log("Clicked toggleDirectMessageUser for user ", username);
+function findAsideImgFromUsername(searchedAltText) {
+    if (searchedAltText == null) {
+        searchedAltText = 'Public';
+    }
+    console.log("Called findAsideImgFromUsername for user ", searchedAltText);
     let allMessagesDiv = $("aside");
     let allChildren = allMessagesDiv[0].children;
     let avatarClicked = null;
     for (let i = 0; i < allChildren.length; i++) {
         let child = allChildren[i];
-        if (child.alt === username) {
+        if (child.alt === searchedAltText) {
             avatarClicked = child;
         }
     }
+    return avatarClicked;
+}
 
-    if (directMessagesRecipient == null) {
-        directMessagesRecipient = username;
-        avatarClicked.classList.add('selected');
-        fetch('/fetchChatHistory?user=' + username)
-            .then(response => response.json())
-            .then(obj => console.log('Received obj: ', obj));
-    } else if (directMessagesRecipient === username) {
-        directMessagesRecipient = null;
-        avatarClicked.classList.remove('selected');
-    } else {
-        toggleDirectMessageUser(directMessagesRecipient);
-        toggleDirectMessageUser(username);
-    }
+function toggleDirectMessageUser(username) {
+    let oldClicked = findAsideImgFromUsername(directMessagesRecipient);
+    let newClicked = findAsideImgFromUsername(username);
+
+    oldClicked.classList.remove('selected');
+    newClicked.classList.add('selected');
+    directMessagesRecipient = username;
+    displayMessageWindow();
 }
 
 function handleGifSearch(searchText) {
     $('#gifModalBody').empty();
+    let img = findAsideImgFromUsername(directMessagesRecipient);
+    img.classList.remove('notification');
 
     fetch('/searchGifs?search=' + searchText)
         .then(response => response.json())
@@ -213,6 +238,48 @@ function handleGifSearch(searchText) {
     });
 }
 
+function displayMessageWindow() {
+    let allMessagesDiv = $("#allMessagesDiv");
+    allMessagesDiv.empty();
+    fetch('/fetchChatHistory' +
+        (directMessagesRecipient == null ? '' :
+            ('?user=' + directMessagesRecipient)))
+        .then(response => {
+            // console.log(response);
+            response.json().then(msgs => msgs.forEach(function (msg) {
+                showNewMessage(msg);
+            }));
+        })
+}
+
+function uploadMultipleFiles(files) {
+    var formData = new FormData();
+    for(var index = 0; index < files.length; index++) {
+        formData.append("files", files[index]);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadMultipleFiles");
+
+    xhr.onload = function() {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if(xhr.status === 200) {
+            for(var i = 0; i < response.length; i++) {
+                let fileDownloadUri = response[i].fileDownloadUri;
+                sendMessage(fileDownloadUri, 'LINK');
+            }
+
+            let multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+            multipleFileUploadInput.value = "";
+        } else {
+            console.log((response && response.message) || "Some Error Occurred");
+        }
+    }
+
+    xhr.send(formData);
+}
+
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
@@ -221,7 +288,19 @@ $(function () {
     connect();
 // $( "#connect" ).click(function() { connect(); });
 // $( "#disconnect" ).click(function() { disconnect(); });
-    $("#sendMessage").click(function () {
+    $( "#multipleFileUploadInput" ).change(function() {
         sendMessage();
     });
+    // $( "#multipleUploadFormSubmit" ).click(function() {
+    //     let multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+    //     let files = multipleFileUploadInput.files;
+    //     if(files.length === 0) {
+    //         console.log("No file to send");
+    //     }
+    //     uploadMultipleFiles(files);
+    // });
+
+
+    let publicImg = findAsideImgFromUsername(directMessagesRecipient);
+    publicImg.classList.add('selected');
 });
