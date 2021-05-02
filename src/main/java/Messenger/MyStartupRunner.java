@@ -17,7 +17,5 @@ public class MyStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Hello!");
-        gifService.prepareGifMessageText("::DrakeYea");
-    }
+        log.info("Hello!"); }
 }

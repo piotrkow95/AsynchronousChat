@@ -136,6 +136,9 @@ $(function () {
                 let child = allChildren[i];
                 if (child.textContent.trim() === message.username) {
                     allMessagesDiv[0].removeChild(child);
+                    if (directMessagesRecipient.trim() === message.username) {
+                        directMessagesRecipient = null;
+                    }
                 }
             }
         }
@@ -163,6 +166,9 @@ $(function () {
             directMessagesRecipient = null;
             buttonClicked.style.backgroundColor = '';
             buttonClicked.style.textDecoration = '';
+        } else {
+            toggleDirectMessageUser(directMessagesRecipient);
+            toggleDirectMessageUser(username);
         }
     }
 

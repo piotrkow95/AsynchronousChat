@@ -1,5 +1,6 @@
 package Messenger.services;
 
+import Messenger.exceptions.GifException;
 import Messenger.frontend.PrivateOutboundMessageController;
 import Messenger.frontend.dto.SendMessageDto;
 import Messenger.frontend.dto.SendPrivateMessageDto;
@@ -51,8 +52,13 @@ public class MessageService {
         String textToSend = messageDto.getText();
         MessageType messageType = MessageType.TEXT;
         if (gifService.isGifMessage(textToSend)) {
-            textToSend = gifService.prepareGifMessageText(textToSend);
-            messageType = MessageType.GIF;
+            try {
+                textToSend = gifService.prepareGifMessageText(textToSend);
+                messageType = MessageType.GIF;
+            } catch (GifException e) {
+                log.warning("Problem with fetching gif " + textToSend);
+                textToSend = "Cannot send gif";
+            }
 
         }
 
