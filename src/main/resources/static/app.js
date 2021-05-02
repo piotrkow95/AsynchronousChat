@@ -178,6 +178,9 @@ function toggleDirectMessageUser(username) {
     if (directMessagesRecipient == null) {
         directMessagesRecipient = username;
         avatarClicked.classList.add('selected');
+        fetch('/fetchChatHistory?user=' + username)
+            .then(response => response.json())
+            .then(obj => console.log('Received obj: ', obj));
     } else if (directMessagesRecipient === username) {
         directMessagesRecipient = null;
         avatarClicked.classList.remove('selected');

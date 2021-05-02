@@ -18,10 +18,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Log
 public class PresenceService {
+    public static final Map<String, String> JSESSIONID_TO_STOMPID_MAP = new HashMap<>();
     private final UsernameService usernameService;
     private final PresenceController presenceController;
 
-    private Map<String, User> activeUsers = new HashMap<>();
+    private final Map<String, User> activeUsers = new HashMap<>();
 
     public void userLoggedIn(Principal principal) {
         String newUsername = null;
@@ -42,13 +43,21 @@ public class PresenceService {
     }
 
     public void userLoggedOut(String principalName) {
-        User oldUser = activeUsers.remove(principalName);
-        presenceController.publishLogoutInfo(oldUser);
+        if (principalName != null) {
+            User oldUser = activeUsers.remove(principalName);
+            presenceController.publishLogoutInfo(oldUser);
+        }
     }
 
         public User getUser(String principalName) {
             return activeUsers.get(principalName);
     }
+
+    public User getUserByCookie(String jsessionid) {
+        String stompId = JSESSIONID_TO_STOMPID_MAP.get(jsessionid);
+        return getUser(stompId);
+    }
+
 
     public User getUserByName(String name) {
         return getAllActiveUsers().stream().filter(u -> u.getName().equals(name)).findFirst().get();

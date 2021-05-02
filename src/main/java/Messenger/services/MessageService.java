@@ -4,17 +4,18 @@ import Messenger.exceptions.GifException;
 import Messenger.frontend.PrivateOutboundMessageController;
 import Messenger.frontend.dto.SendMessageDto;
 import Messenger.frontend.dto.SendPrivateMessageDto;
+import Messenger.model.Conversation;
 import Messenger.model.Message;
 import Messenger.model.MessageType;
 import Messenger.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,8 @@ public class MessageService {
     private final List<Message> allMessages = new ArrayList<>();
     private final PresenceService presenceService;
     private final PrivateOutboundMessageController privateOutboundMessageController;
-    private final GifService gifService;
 
+    private final Map<Conversation, List<Message>> privateMessages = new HashMap<>();
 
     public Message postPublicMessage(SendMessageDto messageDto, String principalName) {
         final Message msg = prepareMessage(messageDto, principalName);
@@ -38,6 +39,15 @@ public class MessageService {
 
     public void postPrivateMessage(SendPrivateMessageDto messageDto, String principalName) {
         final Message msg = prepareMessage(messageDto, principalName);
+        Conversation conversation = new Conversation(Set.of(
+                msg.getSender().getPrincipalName(),
+                msg.getRecipient().getPrincipalName()));
+        privateMessages.computeIfAbsent(conversation, c -> new ArrayList<>());
+        privateMessages.computeIfPresent(conversation, (c, messageList) -> {
+            messageList.add(msg);
+            return messageList;
+        });
+
         privateOutboundMessageController.publishPrivateMessage(msg);
     }
 
@@ -51,15 +61,6 @@ public class MessageService {
 
         String textToSend = messageDto.getText();
         MessageType messageType = MessageType.TEXT;
-//        if (gifService.isGifMessage(textToSend)) {
-//            try {
-//                textToSend = gifService.prepareGifMessageText(textToSend);
-//                messageType = MessageType.GIF;
-//            } catch (GifException e) {
-//                log.warning("Problem with fetching gif " + textToSend);
-//                textToSend = "Cannot send gif";
-//            }
-//        }
 
         return new Message(textToSend, LocalDateTime.now(), sender, recipient, messageType);
     }
@@ -78,5 +79,16 @@ public class MessageService {
                 privateOutboundMessageController.publishOldPublicMessage(recipient, msg);
             }
         }).start();
+    }
+
+    public List<Message> getConversationMessages(@Nullable String displayedUserName, String principalName) {
+        if (displayedUserName == null) {
+            return readAllPublicMessages();
+        }
+        User user1 = presenceService.getUserByName(displayedUserName);
+        User user2 = presenceService.getUser(principalName);
+
+        Conversation conversation = new Conversation(Set.of(user1.getPrincipalName(), user2.getPrincipalName()));
+        return privateMessages.get(conversation);
     }
 }

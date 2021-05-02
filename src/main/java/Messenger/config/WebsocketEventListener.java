@@ -33,7 +33,7 @@ public class WebsocketEventListener {
 
     @EventListener
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
-        String principalName = event.getUser().getName();
+        String principalName = event.getUser() == null ? null : event.getUser().getName();
         log.info("User: " + principalName + " connected.");
         presenceService.userLoggedOut(principalName);
     }
