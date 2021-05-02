@@ -1,6 +1,24 @@
 var stompClient = null;
 
+function fetchAllActiveUsersBlocking() {
+    var request = new XMLHttpRequest();
+    request.open('GET', '/allActiveUsers', false);
+    request.send(null);
+
+    if (request.status === 200) {
+        let users = JSON.parse(request.responseText);
+        users.forEach(function (user) {
+            console.log(user);
+            user.type = 'USER_LOGGED_IN';
+            user.username = user.name;
+            handleUsersActivity(user);
+        });
+    }
+}
+
 function connect() {
+    fetchAllActiveUsersBlocking();
+
     var socket = new SockJS('/websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +57,21 @@ public class MessageService {
         }
 
         return new Message(textToSend, LocalDateTime.now(), sender, recipient, messageType);
+    }
+
+    public void sendRecap(Principal principal) {
+        // powinno być rozwiązane inaczej - sleep to zła praktyka
+        // zamiast tego analogicznie jak presence (PrecenceRestController + javascript w connect() do jego obsługi
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            final User recipient = presenceService.getUser(principal.getName());
+            for (Message msg : allMessages) {
+                privateOutboundMessageController.publishOldPublicMessage(recipient, msg);
+            }
+        }).start();
     }
 }

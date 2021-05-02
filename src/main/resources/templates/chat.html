@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>PK Messenger</title>
@@ -15,22 +15,11 @@
 <div>
     <h2>Active users:</h2>
     <div id="allActiveUsersDiv">
-        <button th:each="user : ${allActiveUsers}"
-                th:text="${user.name} + ' '"
-                th:style="'color: ' + ${user.colorCode} + ';'"
-                th:data1="${user.name}"
-                onclick="toggleDirectMessageUser(this.getAttribute('data1'));"
-        ></button>
     </div>
 </div>
 <div>
     <h3>Chat window:</h3>
     <div id="allMessagesDiv">
-        <div th:each="msg : ${allMessages}">
-            <span th:text="${msg.getHumanReadableTimestamp()}"></span>
-            <span th:style="'color:' + ${msg.sender.colorCode} + ';'" th:text="${msg.sender.getName()}" ></span>
-            <span th:text="${msg.text}"></span>
-        </div>
     </div>
 </div>
 

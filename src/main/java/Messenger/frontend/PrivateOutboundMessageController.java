@@ -17,4 +17,9 @@ public class PrivateOutboundMessageController {
         simpMessagingTemplate.convertAndSendToUser(msg.getRecipient().getPrincipalName(), "/topic/privateMessages", msg);
 
     }
+
+    public void publishOldPublicMessage(User recipient, Message msg) {
+        simpMessagingTemplate.convertAndSendToUser(recipient.getPrincipalName(), "/topic/privateMessages", msg);
+    }
+
 }

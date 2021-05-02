@@ -26,9 +26,6 @@ public class FrontendController {
 
     @GetMapping("/chat")
     public String chat(Model model) {
-        model.addAttribute("allMessages",
-                messageService.readAllPublicMessages());
-        model.addAttribute("allActiveUsers", presenceService.getAllActiveUsers());
         return "chat";
     }
 }

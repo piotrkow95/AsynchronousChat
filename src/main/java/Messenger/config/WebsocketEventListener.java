@@ -1,5 +1,6 @@
 package Messenger.config;
 
+import Messenger.services.MessageService;
 import Messenger.services.PresenceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -8,15 +9,17 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.security.Principal;
 
 @Log
 @RequiredArgsConstructor
 @Component
-public class PresenceEventListener {
+public class WebsocketEventListener {
 
     private final PresenceService presenceService;
+    private final MessageService messageService;
 
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
@@ -33,5 +36,17 @@ public class PresenceEventListener {
         String principalName = event.getUser().getName();
         log.info("User: " + principalName + " connected.");
         presenceService.userLoggedOut(principalName);
+    }
+
+    @EventListener
+    public void handleTopicSubscription(SessionSubscribeEvent event) {
+        SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
+        Principal principal = event.getUser();
+        String destination = headers.getDestination();
+        switch (destination) {
+            case "/topic/allMessages":
+                messageService.sendRecap(principal);
+                break;
+        }
     }
 }
