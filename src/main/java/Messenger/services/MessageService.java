@@ -1,6 +1,5 @@
 package Messenger.services;
 
-import Messenger.exceptions.GifException;
 import Messenger.frontend.PrivateOutboundMessageController;
 import Messenger.frontend.dto.SendMessageDto;
 import Messenger.frontend.dto.SendPrivateMessageDto;
@@ -60,8 +59,7 @@ public class MessageService {
                 sender.getName() + " to " + (recipient == null ? "all" : recipient.getName()));
 
         String textToSend = messageDto.getText();
-        MessageType messageType = MessageType.TEXT;
-
+        MessageType messageType = messageDto.getType();
         return new Message(textToSend, LocalDateTime.now(), sender, recipient, messageType);
     }
 

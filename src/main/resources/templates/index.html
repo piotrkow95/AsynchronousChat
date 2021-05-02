@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>PK Messenger</title>
+    <title>SDA Messenger</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
 </head>
 <body>
 <h1 th:text="'Hello ' + ${principalName} + '!'"></h1>
-<a th:href="@{/chat}">Open chat</a>
+<a th:href="@{/chat}">Enter chat</a>
 <a th:if="${principalName.equals('anonymous')}" th:href="@{/login}">Log in</a>
 </body>
 </html>

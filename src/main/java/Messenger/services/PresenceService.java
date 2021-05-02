@@ -22,6 +22,7 @@ public class PresenceService {
     private final UsernameService usernameService;
     private final PresenceController presenceController;
 
+    // Map<principalName, User>
     private final Map<String, User> activeUsers = new HashMap<>();
 
     public void userLoggedIn(Principal principal) {
@@ -30,11 +31,11 @@ public class PresenceService {
         if (principal instanceof MyPrincipal) {
             final Map.Entry<String, String> pair = usernameService.generateNewUsername();
             newUsername = pair.getKey();
-            newUserAvatar = pair.getValue();        } else if (principal instanceof OAuth2AuthenticationToken){
+            newUserAvatar = pair.getValue();
+        } else if (principal instanceof OAuth2AuthenticationToken){
             OAuth2User user = ((OAuth2AuthenticationToken) principal).getPrincipal();
             newUsername = user.getAttribute("name");
             newUserAvatar = user.getAttribute("avatar_url");
-
         }
 
         User newUser = new User(newUsername, principal.getName(), newUserAvatar);
@@ -49,8 +50,12 @@ public class PresenceService {
         }
     }
 
-        public User getUser(String principalName) {
-            return activeUsers.get(principalName);
+    public User getUser(String principalName) {
+        return activeUsers.get(principalName);
+    }
+
+    public User getUserByName(String name) {
+        return getAllActiveUsers().stream().filter(u -> u.getName().equals(name)).findFirst().get();
     }
 
     public User getUserByCookie(String jsessionid) {
@@ -60,11 +65,6 @@ public class PresenceService {
             log.warning("Could not find user with cookie " + jsessionid);
         }
         return user;
-    }
-
-
-    public User getUserByName(String name) {
-        return getAllActiveUsers().stream().filter(u -> u.getName().equals(name)).findFirst().get();
     }
 
     public Collection<User> getAllActiveUsers() {

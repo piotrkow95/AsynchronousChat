@@ -1,15 +1,14 @@
 package Messenger.frontend;
 
-import Messenger.services.MessageService;
-import Messenger.services.PresenceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import Messenger.services.MessageService;
+import Messenger.services.PresenceService;
 
 import java.security.Principal;
-
 
 @Log
 @RequiredArgsConstructor

@@ -75,7 +75,6 @@ function sendMessage(text, type) {
                 }
             ));
         }
-
     }
 
 }
@@ -94,7 +93,6 @@ function showNewMessage(message) {
         console.log('Skip message ', message);
         return;
     }
-
     let div = document.createElement('div');
     let timestampSpan = document.createElement('span');
     timestampSpan.textContent = message.humanReadableTimestamp + ' ';
@@ -113,22 +111,21 @@ function showNewMessage(message) {
         recipientSpan.textContent = ' ' + message.recipient.name + ' ';
         recipientSpan.style = 'color: ' + message.recipient.colorCode + ';';
     }
-
     let textSpan = null;
     let video = null;
-    if (message.type === "TEXT") {  //text messages front
+    if (message.type === "TEXT") {
         textSpan = document.createElement('span');
         textSpan.textContent = message.text;
     } else if (message.type === 'LINK') {
         textSpan = document.createElement('span');
         let a = document.createElement('a');
         a.href = message.text;
-        let fileName = message.text.substring(message.text.lastIndexOf('/') + 1);
+        let fileName = message.text.substring(message.text.lastIndexOf('/')+1);
         fileName = decodeURI(fileName);
         a.innerText = fileName;
         a.target = '_blank';
         textSpan.appendChild(a);
-    } else if (message.type === "GIF") {
+    }  else if (message.type === "GIF") {
         video = document.createElement('video');
         video.autoplay = true;
         video.loop = true;
@@ -145,7 +142,6 @@ function showNewMessage(message) {
         div.appendChild(arrowSpan);
         div.appendChild(recipientSpan);
     }
-
     if (textSpan != null) {
         div.appendChild(textSpan);
     }
@@ -215,9 +211,6 @@ function toggleDirectMessageUser(username) {
 
 function handleGifSearch(searchText) {
     $('#gifModalBody').empty();
-    let img = findAsideImgFromUsername(directMessagesRecipient);
-    img.classList.remove('notification');
-
     fetch('/searchGifs?search=' + searchText)
         .then(response => response.json())
         .then(gifUrls => gifUrls.forEach(function (gifUrl) {
@@ -234,13 +227,16 @@ function handleGifSearch(searchText) {
 
             body.appendChild(video);
         })).then(function () {
-        $('#gifModal').modal('show');
+            $('#gifModal').modal('show');
     });
 }
 
 function displayMessageWindow() {
     let allMessagesDiv = $("#allMessagesDiv");
     allMessagesDiv.empty();
+    let img = findAsideImgFromUsername(directMessagesRecipient);
+    img.classList.remove('notification');
+
     fetch('/fetchChatHistory' +
         (directMessagesRecipient == null ? '' :
             ('?user=' + directMessagesRecipient)))
@@ -248,8 +244,9 @@ function displayMessageWindow() {
             response.json().then(msgs => msgs.forEach(function (msg) {
                 showNewMessage(msg);
             }));
-        })
+        } )
 }
+
 
 function uploadMultipleFiles(files) {
     var formData = new FormData();
@@ -268,7 +265,6 @@ function uploadMultipleFiles(files) {
                 let fileDownloadUri = response[i].fileDownloadUri;
                 sendMessage(fileDownloadUri, 'LINK');
             }
-
             let multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
             multipleFileUploadInput.value = "";
         } else {
@@ -283,10 +279,15 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-
     connect();
+    $( "#sendMessage" ).click(function() { sendMessage(); });
     $( "#multipleFileUploadInput" ).change(function() {
-        sendMessage();
+        let multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+        let files = multipleFileUploadInput.files;
+        if(files.length === 0) {
+            console.log("No file to send");
+        }
+        uploadMultipleFiles(files);
     });
 
 

@@ -1,14 +1,10 @@
 package Messenger.services;
 
-
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
-@SessionScope
 public class UsernameService {
     private final Random random = new Random();
     private final Map<String, String> namesImagesMap = new HashMap<>();
