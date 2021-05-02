@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import Messenger.services.GifService;
 
+import java.util.List;
+
 
 @Log
 @RequiredArgsConstructor
@@ -17,5 +19,7 @@ public class MyStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Hello!"); }
+        log.info("Hello!");
+        List<String> star_wars = gifService.searchForGifs("star wars");
+    }
 }

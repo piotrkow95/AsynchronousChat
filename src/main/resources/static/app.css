@@ -12,8 +12,20 @@ body {
     margin: auto;
 }
 
-video {
+#allMessagesDiv video {
     max-width: 100%;
     max-height: 30vh;
     display: block;
+}
+
+#gifModalBody {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+#gifModalBody video {
+    max-height: 20vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
 }

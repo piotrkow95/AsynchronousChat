@@ -51,16 +51,15 @@ public class MessageService {
 
         String textToSend = messageDto.getText();
         MessageType messageType = MessageType.TEXT;
-        if (gifService.isGifMessage(textToSend)) {
-            try {
-                textToSend = gifService.prepareGifMessageText(textToSend);
-                messageType = MessageType.GIF;
-            } catch (GifException e) {
-                log.warning("Problem with fetching gif " + textToSend);
-                textToSend = "Cannot send gif";
-            }
-
-        }
+//        if (gifService.isGifMessage(textToSend)) {
+//            try {
+//                textToSend = gifService.prepareGifMessageText(textToSend);
+//                messageType = MessageType.GIF;
+//            } catch (GifException e) {
+//                log.warning("Problem with fetching gif " + textToSend);
+//                textToSend = "Cannot send gif";
+//            }
+//        }
 
         return new Message(textToSend, LocalDateTime.now(), sender, recipient, messageType);
     }
