@@ -1,4 +1,4 @@
-package Messenger.model;
+package Messenger.services;
 
 import lombok.extern.java.Log;
 import org.springframework.core.io.Resource;

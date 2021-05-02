@@ -30,36 +30,25 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket")
-                .addInterceptors(new HandshakeInterceptor() {
-                    @Override
-                    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-                        List<String> cookie = request.getHeaders().get("cookie");
-                        System.out.println("Received determineUser with cookie " + cookie + " and request " + request.getURI());
-                        String jsessionid = cookie.stream().filter(s -> s.startsWith("JSESSIONID")).map(s -> s.replaceFirst("JSESSIONID=", "")).findFirst().get();
-                        // http://localhost:8080/websocket/335/4garada2/websocket
-                        String[] uriParts = request.getURI().toString().split("/");
-                        String stompClientId = uriParts[uriParts.length - 2];
-                        System.out.println("Adding mapping jsessionid=" + jsessionid + " to stompClientId=" + stompClientId);
-                        JSESSIONID_TO_STOMPID_MAP.put(jsessionid, stompClientId);
-                        return true;
-                    }
-
-                    @Override
-                    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
-                    }
-                })
-                //.setHandshakeHandler(new UserHandler())
+                .addInterceptors(new MyHandshakeInterceptor())
                 .withSockJS();
     }
 
-    public static class UserHandler extends DefaultHandshakeHandler {
+    private static class MyHandshakeInterceptor implements HandshakeInterceptor {
         @Override
-        protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-//            accessor.setUser(new MyPrincipal(accessor.getSessionId()));
+        public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+
             List<String> cookie = request.getHeaders().get("cookie");
-            logger.info("Received determineUser with cookie " + cookie + " and request " + request.getURI());
-            return super.determineUser(request, wsHandler, attributes);
+            System.out.println("Received determineUser with cookie " + cookie + " and request " + request.getURI());
+            String jsessionid = cookie.stream().filter(s -> s.startsWith("JSESSIONID")).map(s -> s.replaceFirst("JSESSIONID=", "")).findFirst().get();
+            String[] uriParts = request.getURI().toString().split("/");
+            String stompClientId = uriParts[uriParts.length - 2];
+            System.out.println("Adding mapping jsessionid=" + jsessionid + " to stompClientId=" + stompClientId);
+            JSESSIONID_TO_STOMPID_MAP.put(jsessionid, stompClientId);
+            return true;
+        }
+        @Override
+        public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
         }
     }
-
 }

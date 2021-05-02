@@ -245,7 +245,6 @@ function displayMessageWindow() {
         (directMessagesRecipient == null ? '' :
             ('?user=' + directMessagesRecipient)))
         .then(response => {
-            // console.log(response);
             response.json().then(msgs => msgs.forEach(function (msg) {
                 showNewMessage(msg);
             }));
@@ -286,19 +285,9 @@ $(function () {
     });
 
     connect();
-// $( "#connect" ).click(function() { connect(); });
-// $( "#disconnect" ).click(function() { disconnect(); });
     $( "#multipleFileUploadInput" ).change(function() {
         sendMessage();
     });
-    // $( "#multipleUploadFormSubmit" ).click(function() {
-    //     let multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
-    //     let files = multipleFileUploadInput.files;
-    //     if(files.length === 0) {
-    //         console.log("No file to send");
-    //     }
-    //     uploadMultipleFiles(files);
-    // });
 
 
     let publicImg = findAsideImgFromUsername(directMessagesRecipient);

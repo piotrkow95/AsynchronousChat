@@ -1,6 +1,6 @@
 package Messenger.frontend;
 
-import Messenger.model.FileStorageService;
+import Messenger.services.FileStorageService;
 import Messenger.model.Message;
 import Messenger.model.UploadFileResponse;
 import Messenger.services.MessageService;
