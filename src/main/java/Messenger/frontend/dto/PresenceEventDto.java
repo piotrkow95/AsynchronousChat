@@ -1,5 +1,6 @@
 package Messenger.frontend.dto;
 
+import Messenger.model.User;
 import lombok.Data;
 
 @Data
@@ -10,7 +11,6 @@ public class PresenceEventDto {
         USER_LOGGED_OUT;
     }
 
-    private final String username;
-    private final String colorCode;
+    private final User user;
     private final PresenceEventType type;
 }

@@ -2,13 +2,32 @@ body {
     height: 100vh;
 }
 
+aside {
+    width: 10vw;
+    height: 100vh;
+    float: left;
+}
+
+main {
+    float: left;
+    width: 89vw;
+    height: 100vh;
+}
+
+aside img {
+    width: 9vw;
+}
+
+.selected {
+    border: 2px solid blue;
+}
+
 #allMessagesDiv {
     position: relative;
     overflow-x: hidden;
     overflow-y: scroll;
     max-height: 70vh;
     height: 70vh;
-    width: 95vw;
     margin: auto;
 }
 

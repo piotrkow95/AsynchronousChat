@@ -17,14 +17,12 @@ public class PresenceController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public void publishLoginInfo(User newUser) {
-        PresenceEventDto dto = new PresenceEventDto(newUser.getName(),
-                newUser.getColorCode(), USER_LOGGED_IN);
+        PresenceEventDto dto = new PresenceEventDto(newUser, USER_LOGGED_IN);
         simpMessagingTemplate.convertAndSend("/topic/allLogins", dto);
     }
 
     public void publishLogoutInfo(User newUser) {
-        PresenceEventDto dto = new PresenceEventDto(newUser.getName(),
-                newUser.getColorCode(), USER_LOGGED_OUT);
+        PresenceEventDto dto = new PresenceEventDto(newUser, USER_LOGGED_OUT);
         simpMessagingTemplate.convertAndSend("/topic/allLogins", dto);
     }
 

@@ -8,10 +8,10 @@ function fetchAllActiveUsersBlocking() {
     if (request.status === 200) {
         let users = JSON.parse(request.responseText);
         users.forEach(function (user) {
-            console.log(user);
-            user.type = 'USER_LOGGED_IN';
-            user.username = user.name;
-            handleUsersActivity(user);
+            handleUsersActivity({
+                'type': 'USER_LOGGED_IN',
+                'user': user
+            });
         });
     }
 }
@@ -139,20 +139,21 @@ function showNewMessage(message) {
 }
 
 function handleUsersActivity(message) {
-    let allMessagesDiv = $("#allActiveUsersDiv");
+    let aside = $('aside');
     if (message.type === "USER_LOGGED_IN") {
-        let userButton = document.createElement('button');
-        userButton.textContent = message.username + ' ';
-        userButton.style = 'color: ' + message.colorCode + ';';
-        userButton.setAttribute("onclick", 'toggleDirectMessageUser(\'' + message.username + '\');');
-        allMessagesDiv.append(userButton);
+        let img = document.createElement('img');
+        img.alt = message.user.name;
+        img.src = message.user.avatarUrl;
+        img.setAttribute("onclick", 'toggleDirectMessageUser(\'' + message.user.name + '\');');
+
+        aside.append(img);
     } else if (message.type === "USER_LOGGED_OUT") {
-        let allChildren = allMessagesDiv[0].children;
+        let allChildren = aside[0].children;
         for (let i = 0; i < allChildren.length; i++) {
             let child = allChildren[i];
-            if (child.textContent.trim() === message.username) {
-                allMessagesDiv[0].removeChild(child);
-                if (directMessagesRecipient.trim() === message.username) {
+            if (child.alt === message.user.name) {
+                aside[0].removeChild(child);
+                if (directMessagesRecipient.trim() === message.user.name) {
                     directMessagesRecipient = null;
                 }
             }
@@ -164,24 +165,22 @@ let directMessagesRecipient = null;
 
 function toggleDirectMessageUser(username) {
     console.log("Clicked toggleDirectMessageUser for user ", username);
-    let allMessagesDiv = $("#allActiveUsersDiv");
+    let allMessagesDiv = $("aside");
     let allChildren = allMessagesDiv[0].children;
-    let buttonClicked = null;
+    let avatarClicked = null;
     for (let i = 0; i < allChildren.length; i++) {
         let child = allChildren[i];
-        if (child.textContent.trim() === username) {
-            buttonClicked = child;
+        if (child.alt === username) {
+            avatarClicked = child;
         }
     }
 
     if (directMessagesRecipient == null) {
         directMessagesRecipient = username;
-        buttonClicked.style.backgroundColor = 'red';
-        buttonClicked.style.textDecoration = 'underline';
+        avatarClicked.classList.add('selected');
     } else if (directMessagesRecipient === username) {
         directMessagesRecipient = null;
-        buttonClicked.style.backgroundColor = '';
-        buttonClicked.style.textDecoration = '';
+        avatarClicked.classList.remove('selected');
     } else {
         toggleDirectMessageUser(directMessagesRecipient);
         toggleDirectMessageUser(username);

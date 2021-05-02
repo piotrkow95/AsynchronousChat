@@ -25,14 +25,18 @@ public class PresenceService {
 
     public void userLoggedIn(Principal principal) {
         String newUsername = null;
+        String newUserAvatar = null;
         if (principal instanceof MyPrincipal) {
-            newUsername = usernameService.generateNewUsername();
-        } else if (principal instanceof OAuth2AuthenticationToken){
+            final Map.Entry<String, String> pair = usernameService.generateNewUsername();
+            newUsername = pair.getKey();
+            newUserAvatar = pair.getValue();        } else if (principal instanceof OAuth2AuthenticationToken){
             OAuth2User user = ((OAuth2AuthenticationToken) principal).getPrincipal();
             newUsername = user.getAttribute("name");
+            newUserAvatar = user.getAttribute("avatar_url");
+
         }
 
-        User newUser = new User(newUsername, principal.getName());
+        User newUser = new User(newUsername, principal.getName(), newUserAvatar);
         activeUsers.put(principal.getName(), newUser);
         presenceController.publishLoginInfo(newUser);
     }

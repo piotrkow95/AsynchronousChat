@@ -11,25 +11,26 @@
     <link href="/app.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    <h2>Active users:</h2>
-    <div id="allActiveUsersDiv">
+<aside>
+    <img src="/avatars/globe.png" alt="Public" onclick="toggleDirectMessageUser(null)" />
+</aside>
+
+
+
+<main>
+    <div>
+        <h3>Chat window:</h3>
+        <div id="allMessagesDiv">
+        </div>
     </div>
-</div>
-<div>
-    <h3>Chat window:</h3>
-    <div id="allMessagesDiv">
-    </div>
-</div>
+    <form>
+        <label for="newMessageInput">Content:</label>
+        <input id="newMessageInput" type="text">
 
-<form>
-    <label for="newMessageInput">Content:</label>
-    <input id="newMessageInput" type="text">
-
-    <button type="submit" id="sendMessage">Send</button>
-    //sendMessage from app.js
-</form>
-
+        <button type="submit" id="sendMessage">Send</button>
+        //sendMessage from app.js
+    </form>
+</main>
 <div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
